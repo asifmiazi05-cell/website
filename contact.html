@@ -20,7 +20,7 @@
       <button type="submit"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2.2"/><line x1="21" y1="21" x2="16.2" y2="16.2" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button>
     </form>
     <div class="header-icons">
-      <button type="button" class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle dark mode"><span class="tt-knob"><span class="theme-ic"><svg viewBox="0 0 24 24" width="13" height="13" fill="none"><circle cx="12" cy="12" r="4.3" stroke="currentColor" stroke-width="2"/><path d="M12 2.5v2.6M12 18.9v2.6M4.5 4.5l1.8 1.8M17.7 17.7l1.8 1.8M2.5 12h2.6M18.9 12h2.6M4.5 19.5l1.8-1.8M17.7 6.3l1.8-1.8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span></button>
+      <button type="button" class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle dark mode"><span class="tt-knob"><span class="theme-ic"><svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2.25a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-1.5 0V3a.75.75 0 0 1 .75-.75ZM7.5 12a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM18.894 6.166a.75.75 0 0 0-1.06-1.06l-1.591 1.59a.75.75 0 1 0 1.06 1.061l1.591-1.59ZM21.75 12a.75.75 0 0 1-.75.75h-2.25a.75.75 0 0 1 0-1.5H21a.75.75 0 0 1 .75.75ZM17.834 18.894a.75.75 0 0 0 1.06-1.06l-1.59-1.591a.75.75 0 1 0-1.061 1.06l1.59 1.591ZM12 18a.75.75 0 0 1 .75.75V21a.75.75 0 0 1-1.5 0v-2.25A.75.75 0 0 1 12 18ZM7.758 17.303a.75.75 0 0 0-1.061-1.06l-1.591 1.59a.75.75 0 0 0 1.06 1.061l1.592-1.59ZM6 12a.75.75 0 0 1-.75.75H3a.75.75 0 0 1 0-1.5h2.25A.75.75 0 0 1 6 12ZM6.697 7.757a.75.75 0 0 0 1.06-1.06l-1.59-1.591a.75.75 0 0 0-1.061 1.06l1.59 1.591Z"/></svg></span></span></button>
       <a href="shop.html?offer=1" class="icon-link"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12.6 3.2 20 10.6a2 2 0 0 1 0 2.8l-6.6 6.6a2 2 0 0 1-2.8 0L3.2 12.6V4a.8.8 0 0 1 .8-.8h8.6Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><circle cx="8" cy="8" r="1.6" fill="currentColor"/></svg></span> Offers</a>
       <a href="checkout.html" class="icon-link cart-icon-wrap">
         <span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M3 4h2l2.4 12.2a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 2-1.6L21 8H6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10" cy="21" r="1.4" fill="currentColor"/><circle cx="17" cy="21" r="1.4" fill="currentColor"/></svg></span>
@@ -73,13 +73,13 @@
 
   <div class="co-card">
     <h2>Send a Message</h2>
-    <form id="contactForm">
+    <form id="contactForm" novalidate>
     <div class="field-row">
-      <div class="field"><label>Name</label><input type="text" required placeholder="Your name"></div>
-      <div class="field"><label>Mobile / Email</label><input type="text" required placeholder="Contact information"></div>
+      <div class="field"><label>Name</label><input type="text" id="contactNameInput" required placeholder="Your name"></div>
+      <div class="field"><label>Mobile / Email</label><input type="text" id="contactInfoInput" required placeholder="Contact information"></div>
     </div>
     <div class="field"><label>Subject</label><input type="text" placeholder="Subject of your message"></div>
-    <div class="field"><label>Message</label><textarea required placeholder="Write your question or message" style="min-height:120px;"></textarea></div>
+    <div class="field"><label>Message</label><textarea id="contactMessageInput" required placeholder="Write your question or message" style="min-height:120px;"></textarea></div>
     <button type="submit" class="submit-btn">Send Message</button>
     <div class="confirm-box" id="contactConfirm"></div>
   </form>

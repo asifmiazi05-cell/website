@@ -55,7 +55,51 @@ const categoryNames = {
 };
 
 function fmtPrice(n){
+  return '৳' + Number(n).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
+}
+
+/* Used only for the Subtotal / Delivery Charge / Total rows inside the
+   Checkout page's "Payment Method" card, which keep the "BDT" text
+   instead of the ৳ symbol used everywhere else on the site. */
+function fmtPriceBDT(n){
   return Number(n).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' BDT';
+}
+
+/* Custom field-level validation tooltip — shows a small notice pointing at a
+   specific field (used instead of the browser's default "Please fill out
+   this field" bubble), and closes itself automatically. */
+let _fieldNoticeEl = null;
+let _fieldNoticeTimer = null;
+function showFieldNotice(target, msg){
+  hideFieldNotice();
+  if(!target) return;
+  const tip = document.createElement('div');
+  tip.className = 'field-notice';
+  tip.innerHTML = `<span class="fn-ic">!</span><span>${msg}</span>`;
+  document.body.appendChild(tip);
+  const r = target.getBoundingClientRect();
+  const maxLeft = window.innerWidth - tip.offsetWidth - 12;
+  let left = Math.max(12, Math.min(r.left, maxLeft > 12 ? maxLeft : r.left));
+  tip.style.left = left + 'px';
+  tip.style.top = (r.bottom + 10) + 'px';
+  requestAnimationFrame(()=> tip.classList.add('show'));
+  _fieldNoticeEl = tip;
+  try{ target.focus({preventScroll:true}); }catch(err){ target.focus(); }
+  const clear = ()=> hideFieldNotice();
+  target.addEventListener('input', clear, {once:true});
+  target.addEventListener('change', clear, {once:true});
+  target.addEventListener('click', clear, {once:true});
+  window.addEventListener('scroll', clear, {once:true, passive:true});
+  _fieldNoticeTimer = setTimeout(hideFieldNotice, 4000);
+}
+function hideFieldNotice(){
+  if(_fieldNoticeTimer){ clearTimeout(_fieldNoticeTimer); _fieldNoticeTimer = null; }
+  if(_fieldNoticeEl){
+    const el = _fieldNoticeEl;
+    el.classList.remove('show');
+    setTimeout(()=>{ if(el.parentNode) el.parentNode.removeChild(el); }, 180);
+    _fieldNoticeEl = null;
+  }
 }
 
 function productHref(p){
@@ -294,8 +338,8 @@ function addProductReview(product, review){
 }
 
 /* dark / light mode toggle */
-const THEME_ICON_MOON = '<svg viewBox="0 0 24 24" width="13" height="13" fill="none"><path d="M20.2 14.6A8.6 8.6 0 1 1 9.4 3.8a7 7 0 0 0 10.8 10.8Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>';
-const THEME_ICON_SUN = '<svg viewBox="0 0 24 24" width="13" height="13" fill="none"><circle cx="12" cy="12" r="4.3" stroke="currentColor" stroke-width="2"/><path d="M12 2.5v2.6M12 18.9v2.6M4.5 4.5l1.8 1.8M17.7 17.7l1.8 1.8M2.5 12h2.6M18.9 12h2.6M4.5 19.5l1.8-1.8M17.7 6.3l1.8-1.8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
+const THEME_ICON_MOON = '<svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor"><path d="M20.354 15.354A9 9 0 0 1 8.646 3.646 9.003 9.003 0 1 0 20.354 15.354Z"/></svg>';
+const THEME_ICON_SUN = '<svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2.25a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-1.5 0V3a.75.75 0 0 1 .75-.75ZM7.5 12a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM18.894 6.166a.75.75 0 0 0-1.06-1.06l-1.591 1.59a.75.75 0 1 0 1.06 1.061l1.591-1.59ZM21.75 12a.75.75 0 0 1-.75.75h-2.25a.75.75 0 0 1 0-1.5H21a.75.75 0 0 1 .75.75ZM17.834 18.894a.75.75 0 0 0 1.06-1.06l-1.59-1.591a.75.75 0 1 0-1.061 1.06l1.59 1.591ZM12 18a.75.75 0 0 1 .75.75V21a.75.75 0 0 1-1.5 0v-2.25A.75.75 0 0 1 12 18ZM7.758 17.303a.75.75 0 0 0-1.061-1.06l-1.591 1.59a.75.75 0 0 0 1.06 1.061l1.592-1.59ZM6 12a.75.75 0 0 1-.75.75H3a.75.75 0 0 1 0-1.5h2.25A.75.75 0 0 1 6 12ZM6.697 7.757a.75.75 0 0 0 1.06-1.06l-1.59-1.591a.75.75 0 0 0-1.061 1.06l1.59 1.591Z"/></svg>';
 function updateThemeIcon(theme){
   document.querySelectorAll('.theme-toggle .theme-ic').forEach(el=>{
     el.innerHTML = theme === 'dark' ? THEME_ICON_MOON : THEME_ICON_SUN;
@@ -326,7 +370,7 @@ function initCartFloat(){
       <svg viewBox="0 0 24 24" fill="none"><path d="M3 4h2l2.4 12.2a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 2-1.6L21 8H6" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10" cy="21" r="1.4" fill="#fff"/><circle cx="17" cy="21" r="1.4" fill="#fff"/></svg>
       <span id="cfCount">0 Items</span>
     </div>
-    <div class="cf-bottom" id="cfTotal">0.00 BDT</div>`;
+    <div class="cf-bottom" id="cfTotal">৳0.00</div>`;
   document.documentElement.appendChild(btn);
   cartFloatEl = btn;
   btn.classList.add('show');
@@ -643,8 +687,8 @@ function initOrderForm(){
     }
     const list = items.map(i=>`${i.name} × ${i.qty}`).join('<br>');
     const subtotal = items.reduce((s,i)=>s+i.price*i.qty, 0);
-    const distEl = document.getElementById('districtSelect');
-    const deliveryCharge = distEl ? (distEl.value === 'Dhaka' ? 60 : 120) : 0;
+    const distEl = document.getElementById('districtValue');
+    const deliveryCharge = (distEl && distEl.value) ? (distEl.value === 'Dhaka' ? 60 : 120) : 0;
     const total = subtotal + deliveryCharge;
     const payEl = document.querySelector('input[name="pay"]:checked');
     const payMethod = payEl ? payEl.value : 'cod';
@@ -671,6 +715,21 @@ function initContactForm(){
   if(!form) return;
   form.addEventListener('submit', function(e){
     e.preventDefault();
+    const nameEl = document.getElementById('contactNameInput');
+    const infoEl = document.getElementById('contactInfoInput');
+    const msgEl = document.getElementById('contactMessageInput');
+    if(!nameEl.value.trim()){
+      showFieldNotice(nameEl, 'Please fill out this field.');
+      return;
+    }
+    if(!infoEl.value.trim()){
+      showFieldNotice(infoEl, 'Please fill out this field.');
+      return;
+    }
+    if(!msgEl.value.trim()){
+      showFieldNotice(msgEl, 'Please fill out this field.');
+      return;
+    }
     const box = document.getElementById('contactConfirm');
     box.innerHTML = `✅ Thank you! Your message has been received, we'll get back to you soon.`;
     box.classList.add('show');
