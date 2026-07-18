@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+<script>(function(){var t=localStorage.getItem("theme")||"light";document.documentElement.setAttribute("data-theme",t);})();</script>
+<style>
+  html,body{background:#F4F5F7;}
+
+  .pd-layout{display:grid; grid-template-columns:440px 1fr; gap:40px; align-items:start;}
+  @media (max-width:900px){ .pd-layout{grid-template-columns:1fr; gap:26px;} }
+
+  .pd-gallery{
+    background:var(--card); border:1px solid var(--border); border-radius:var(--radius);
+    display:flex; flex-direction:column; gap:14px; padding:18px;
+  }
+  .pd-main-img{
+    position:relative; border-radius:12px; aspect-ratio:1/1;
+    background:radial-gradient(circle at 30% 20%, rgba(228,20,29,.10), transparent 55%), var(--bg-alt);
+    display:flex; align-items:center; justify-content:center; font-size:140px;
+    border:1px solid var(--border);
+  }
+  .pd-thumbs{display:flex; gap:10px;}
+  .pd-thumb{
+    width:60px; height:60px; border-radius:8px; border:1px solid var(--border);
+    background:var(--bg-alt); display:flex; align-items:center; justify-content:center;
+    font-size:28px; cursor:default;
+  }
+  .pd-thumb:first-child{border-color:var(--accent);}
+
+  .pd-info{display:flex; flex-direction:column; gap:16px;}
+  .pd-crumb{display:flex; align-items:center; gap:8px; font-size:13px; color:var(--text-dim); flex-wrap:wrap;}
+  .pd-crumb a{color:var(--text-dim);}
+  .pd-crumb a:hover{color:var(--accent);}
+  .pd-crumb .sep{color:var(--border);}
+  .pd-crumb .current{color:var(--text); font-weight:600;}
+
+  .pd-name{font-size:26px; font-weight:700; line-height:1.3;}
+  .pd-tag{
+    display:inline-block; width:fit-content; background:var(--warm); color:#241300;
+    font-size:11.5px; font-weight:700; border-radius:6px; padding:3px 9px;
+  }
+  .pd-price-row{display:flex; align-items:baseline; gap:12px; flex-wrap:wrap; padding-bottom:16px; border-bottom:1px solid var(--border);}
+  .pd-price{font-size:28px; font-weight:700; color:var(--accent); font-family:'Plus Jakarta Sans','Noto Sans Bengali';}
+  .pd-price-old{font-size:16px; color:var(--text-dim); text-decoration:line-through;}
+
+  .pd-qty-row{display:flex; align-items:center; gap:16px;}
+  .pd-qty-row .label{font-size:14px; font-weight:600;}
+  .pd-qty-stepper{display:inline-flex; align-items:center; gap:0; border:1px solid var(--border); border-radius:8px; overflow:hidden;}
+  .pd-qty-stepper button{
+    width:36px; height:36px; border:none; background:var(--bg-alt); color:var(--text);
+    font-size:16px; cursor:pointer;
+  }
+  .pd-qty-stepper button:hover{background:var(--accent); color:#fff;}
+  .pd-qty-stepper .qty-val{width:44px; text-align:center; font-family:'Plus Jakarta Sans','Noto Sans Bengali'; font-size:15px;}
+
+  .pd-btn-grid{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+  .pd-btn{
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    padding:13px; border-radius:10px; font-weight:700; font-size:14.5px;
+    border:none; cursor:pointer; text-decoration:none;
+  }
+  .pd-btn:active{transform:scale(.97);}
+  .pd-btn-cart{background:var(--accent); color:#fff;}
+  .pd-btn-cart:hover{background:var(--accent-hover);}
+  .pd-btn-buy{background:#14210F; color:#fff;}
+  .pd-btn-buy:hover{background:#0b1409;}
+  .pd-btn-whatsapp{background:#25A25A; color:#fff;}
+  .pd-btn-whatsapp:hover{background:#1E8A4B;}
+  .pd-btn-call{background:#2B3A9E; color:#fff;}
+  .pd-btn-call:hover{background:#232F80;}
+
+  .pd-brand-row{display:flex; align-items:center; gap:10px; margin-top:4px;}
+  .pd-brand-row .k{font-size:13.5px; color:var(--text-dim);}
+  .pd-brand-badge{
+    border:1px solid var(--border); border-radius:8px; padding:6px 14px;
+    font-weight:700; font-size:14px; background:var(--card);
+  }
+
+  .pd-meta-list{display:flex; flex-direction:column; gap:8px; margin-top:8px; padding-top:16px; border-top:1px solid var(--border);}
+  .pd-meta-list div{display:flex; gap:8px; font-size:13.5px; color:var(--text-dim);}
+  .pd-meta-list b{color:var(--text); font-weight:600;}
+
+  .pd-added-msg{
+    display:none; background:var(--accent-dim); color:var(--accent-hover); border:1px solid var(--accent);
+    border-radius:8px; padding:10px 14px; font-size:13.5px; font-weight:600;
+  }
+  .pd-added-msg.show{display:block;}
+</style>
+<title>Product — Gadget Haat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <div class="wrap top-header">
+    <a href="index.html" class="logo"><div class="logo-mark">GH</div>Gadget Haat</a>
+    <form class="search-form" onsubmit="return doSearch(event)">
+      <input type="text" id="searchInput" placeholder="Search products...">
+      <button type="submit"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2.2"/><line x1="21" y1="21" x2="16.2" y2="16.2" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button>
+    </form>
+    <div class="header-icons">
+      <button type="button" class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle dark mode"><span class="theme-ic">🌙</span></button>
+      <a href="shop.html?offer=1" class="icon-link"><span class="ic">🏷️</span> Offers</a>
+      <a href="checkout.html" class="icon-link cart-icon-wrap">
+        <span class="ic">🛒</span>
+        <span class="cart-badge mono hide" id="cartCount">0</span>
+      </a>
+    </div>
+  </div>
+  <div class="sub-header">
+    <div class="wrap sub-nav-wrap">
+      <div class="sub-nav" id="subNav">
+        <a href="shop.html?cat=audio">Audio</a>
+        <a href="shop.html?cat=watch">Smartwatch</a>
+        <a href="shop.html?cat=power">Power Bank</a>
+        <a href="shop.html?cat=gaming">Gaming Gear</a>
+        <a href="shop.html?cat=light">Smart Light</a>
+        <a href="shop.html?cat=charge">Chargers & Cables</a>
+        <a href="shop.html?cat=camera">Camera Accessories</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="section wrap" style="padding-bottom:24px;">
+  <div class="pd-crumb" style="margin-bottom:22px;">
+    <a href="index.html">🏠 Home</a>
+    <span class="sep">›</span>
+    <a href="shop.html" id="crumbShop">Shop</a>
+    <span class="sep">›</span>
+    <a href="shop.html" id="crumbCat"></a>
+    <span class="sep">›</span>
+    <span class="current" id="crumbCurrent"></span>
+  </div>
+
+  <div class="pd-layout">
+    <div class="pd-gallery">
+      <div class="pd-main-img" id="pMainImg"></div>
+      <div class="pd-thumbs" id="pThumbs"></div>
+    </div>
+
+    <div class="pd-info">
+      <div>
+        <span class="pd-tag hide" id="pTag"></span>
+        <h1 class="pd-name" id="pName" style="margin-top:6px;"></h1>
+      </div>
+
+      <div class="pd-price-row">
+        <span class="pd-price" id="pPrice"></span>
+        <span class="pd-price-old hide" id="pPriceOld"></span>
+      </div>
+
+      <div class="pd-qty-row">
+        <span class="label">Quantity:</span>
+        <div class="pd-qty-stepper">
+          <button type="button" onclick="changeProductQty(-1)">−</button>
+          <span class="qty-val" id="pQtyVal">1</span>
+          <button type="button" onclick="changeProductQty(1)">+</button>
+        </div>
+      </div>
+
+      <div class="pd-btn-grid">
+        <button type="button" class="pd-btn pd-btn-cart" onclick="addProductToCart()">🛍️ Add to Cart</button>
+        <button type="button" class="pd-btn pd-btn-buy" onclick="buyNowProduct()">Buy Now</button>
+        <a href="#" id="pWhatsapp" target="_blank" class="pd-btn pd-btn-whatsapp">💬 Order On WhatsApp</a>
+        <a href="#" id="pCall" class="pd-btn pd-btn-call">📞 Call For Order</a>
+      </div>
+
+      <div class="pd-added-msg" id="pAddedMsg"></div>
+
+      <div class="pd-brand-row">
+        <span class="k">Brand:</span>
+        <span class="pd-brand-badge" id="pBrand"></span>
+      </div>
+
+      <div class="pd-meta-list">
+        <div>🚚 <b>Delivery:</b> 24–48 hours in Dhaka, 3–5 days nationwide</div>
+        <div>🛡️ <b>Warranty:</b> Verified, authorized channel product</div>
+        <div>🔄 <b>Returns:</b> 7-day return/exchange if defective</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section wrap" style="padding-top:0;">
+  <div class="sec-head"><div><h2>You May Also Like</h2></div></div>
+  <div class="grid" id="relatedGrid"></div>
+</section>
+
+<footer>
+  <div class="wrap footer-main">
+    <div class="footer-brand">
+      <div class="flogo-row"><div class="flogo-mark">GH</div><span class="flogo-text">Gadget Haat</span></div>
+      <p>Your trusted destination for original tech products — best prices, delivered straight to your door.</p>
+      <div class="footer-contact-line"><span class="ic"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M6.6 10.8c1.4 2.8 3.8 5.2 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C10.4 21 3 13.6 3 4.6c0-.6.4-1 1-1h3.4c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8Z" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span> 09642-XXXXXX</div>
+      <div class="footer-contact-line"><span class="ic"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="m4 7 8 6 8-6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span> support@gadgethaat.com</div>
+      <div class="footer-contact-line"><span class="ic"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M12 21s7-6.5 7-11.5a7 7 0 1 0-14 0C5 14.5 12 21 12 21Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><circle cx="12" cy="9.5" r="2.3" stroke="currentColor" stroke-width="1.7"/></svg></span> Dhaka, Bangladesh</div>
+    </div>
+    <div class="footer-col">
+      <h5>Quick Links</h5>
+      <a href="index.html">Home</a>
+      <a href="about.html">About Us</a>
+      <a href="shop.html">Shop</a>
+      <a href="contact.html">Contact</a>
+      <a href="faq.html">FAQ</a>
+    </div>
+    <div class="footer-col">
+      <h5>Policies</h5>
+      <a href="faq.html">Privacy Policy</a>
+      <a href="faq.html">Return Policy</a>
+      <a href="faq.html">Refund Policy</a>
+      <a href="faq.html">Warranty Policy</a>
+      <a href="faq.html">Delivery Policy</a>
+      <a href="faq.html">Terms & Conditions</a>
+    </div>
+    <div class="footer-col">
+      <h5>Top Categories</h5>
+      <a href="shop.html?cat=power">Power Bank</a>
+      <a href="shop.html?cat=audio">Audio</a>
+      <a href="shop.html?cat=watch">Smartwatch</a>
+      <a href="shop.html?cat=charge">Chargers & Cables</a>
+      <a href="shop.html?cat=gaming">Gaming Gear</a>
+      <a href="shop.html?cat=light">Smart Light</a>
+      <a href="shop.html?cat=camera">Camera Accessories</a>
+    </div>
+  </div>
+
+  <div class="wrap"><div class="footer-divider"></div></div>
+
+  <div class="wrap footer-bottom-row">
+    <div class="footer-social">
+      <h6>Follow Us</h6>
+      <div class="social-icons">
+        <a href="#" aria-label="Facebook"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M14 9h3V5h-3c-2.2 0-4 1.8-4 4v2H7v4h3v7h4v-7h3l1-4h-4V9c0-.6.4-1 1-1Z"/></svg></a>
+        <a href="#" aria-label="Instagram"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" stroke-width="1.7"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.7"/><circle cx="17.2" cy="6.8" r="1" fill="currentColor"/></svg></a>
+        <a href="#" aria-label="YouTube"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><rect x="2.5" y="5.5" width="19" height="13" rx="3.5" stroke="currentColor" stroke-width="1.7"/><path d="M10.5 9.5v5l4.5-2.5-4.5-2.5Z" fill="currentColor"/></svg></a>
+        <a href="#" aria-label="TikTok"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M14 3c.3 2 1.8 3.5 3.8 3.8v2.6c-1.4 0-2.7-.4-3.8-1.2v6.4a5.4 5.4 0 1 1-5.4-5.4c.3 0 .6 0 .9.1v2.7a2.7 2.7 0 1 0 1.9 2.6V3H14Z"/></svg></a>
+      </div>
+    </div>
+    <div class="pay-with-box">
+      <span class="label">Payment Methods</span>
+      <div class="pay-badges">
+        <span class="pay-badge" style="display:inline-flex; align-items:center; gap:5px;"><img src="bkash-logo.svg" alt="bKash" style="height:11px; width:auto;">bKash</span>
+        <span class="pay-badge" style="display:inline-flex; align-items:center; gap:5px;"><img src="cod-icon.png" alt="Cash on Delivery" style="height:12px; width:auto;">COD</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-copyright"><div class="wrap">© 2026 <b>Gadget Haat</b>. All rights reserved.</div></div></footer>
+
+<script src="app.js"></script>
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const requestedName = params.get('name');
+  const product = products.find(p => p.name === requestedName) || products[0];
+  let pQty = 1;
+
+  function renderProductPage(){
+    document.title = `${product.name} — Gadget Haat`;
+
+    const catLink = document.getElementById('crumbCat');
+    catLink.textContent = categoryNames[product.cat] || product.cat;
+    catLink.href = `shop.html?cat=${product.cat}`;
+    document.getElementById('crumbCurrent').textContent = product.name;
+
+    document.getElementById('pMainImg').textContent = product.emoji;
+    document.getElementById('pThumbs').innerHTML = Array(4).fill(`<div class="pd-thumb">${product.emoji}</div>`).join('');
+
+    const tagEl = document.getElementById('pTag');
+    if(product.tag){
+      tagEl.textContent = product.tag + ' OFF';
+      tagEl.classList.remove('hide');
+    }
+
+    document.getElementById('pName').textContent = product.name;
+    document.getElementById('pPrice').textContent = fmtPrice(product.price);
+
+    const oldEl = document.getElementById('pPriceOld');
+    if(product.old){
+      oldEl.textContent = fmtPrice(product.old);
+      oldEl.classList.remove('hide');
+    }
+
+    document.getElementById('pBrand').textContent = product.brand || 'Gadget Haat';
+
+    const waMsg = encodeURIComponent(`Hi, I'd like to order: ${product.name}`);
+    document.getElementById('pWhatsapp').href = `https://wa.me/8809642XXXXXX?text=${waMsg}`;
+    document.getElementById('pCall').href = 'tel:09642XXXXXX';
+
+    updateProductQtyDisplay();
+
+    const related = products.filter(p => p.cat === product.cat && p.name !== product.name).slice(0, 4);
+    document.getElementById('relatedGrid').innerHTML = (related.length ? related : products.filter(p=>p.name!==product.name).slice(0,4)).map(cardHTML).join('');
+  }
+
+  function updateProductQtyDisplay(){
+    document.getElementById('pQtyVal').textContent = pQty;
+  }
+
+  function changeProductQty(delta){
+    pQty = Math.max(1, pQty + delta);
+    updateProductQtyDisplay();
+  }
+
+  function addProductToCart(){
+    const items = getCartItems();
+    const existing = items.find(i => i.name === product.name);
+    if(existing){ existing.qty += pQty; }
+    else{ items.push({name: product.name, price: Number(product.price), qty: pQty}); }
+    saveCartItems(items);
+    const msg = document.getElementById('pAddedMsg');
+    msg.innerHTML = `✅ Added ${pQty} × ${product.name} to your cart.`;
+    msg.classList.add('show');
+  }
+
+  function buyNowProduct(){
+    addProductToCart();
+    window.location.href = 'checkout.html';
+  }
+
+  renderProductPage();
+</script>
+</body>
+</html>
