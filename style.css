@@ -169,12 +169,19 @@ header{
 .search-form input::placeholder{color:#7B8574;}
 .search-form button{
   position:static; flex-shrink:0; width:44px; height:44px; border-radius:50%;
-  background:#1E241C; color:#fff; border:none; margin:0; padding:0;
+  background:transparent; color:#1E241C; border:none; margin:0; padding:0;
   display:flex; align-items:center; justify-content:center; font-size:16px; line-height:1; cursor:pointer;
-  box-shadow:0 4px 12px rgba(30,36,28,.3);
-  transition:box-shadow .15s ease, transform .15s ease, background .15s ease;
+  box-shadow:none;
+  transition:box-shadow .15s ease, transform .15s ease, background .15s ease, color .15s ease;
 }
-.search-form button:hover{background:#2E362B; box-shadow:0 4px 16px rgba(30,36,28,.45); transform:translateY(-1px);}
+.search-form button:hover,
+.search-form button:focus-visible,
+.search-form button:active{
+  background:#42463E; color:#fff;
+  box-shadow:0 4px 12px rgba(30,36,28,.3);
+}
+.search-form button:active{background:#2E322A; transform:translateY(0);}
+.search-form button:hover{transform:translateY(-1px);}
 
 .header-icons{display:flex; align-items:center; gap:34px; flex-shrink:0;}
 .icon-link{
@@ -185,13 +192,23 @@ header{
 .icon-link .ic{display:flex; align-items:center; line-height:1;}
 .icon-link:hover{color:var(--hdr-accent);}
 .header-icons a[href*="offer"]{
-  padding:8px 14px; margin:-8px -14px; border-radius:999px;
+  display:flex; align-items:center; gap:7px;
+  padding:6px 16px 6px 6px; border-radius:999px;
+  background:var(--hdr-bg-alt); border:1px solid var(--hdr-border);
+  transition:background .2s ease, border-color .2s ease, color .2s ease, transform .15s ease, box-shadow .15s ease;
+}
+.header-icons a[href*="offer"] .ic{
+  width:22px; height:22px; border-radius:50%; background:var(--warm); color:#fff;
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;
   transition:background .2s ease, color .2s ease;
 }
 .header-icons a[href*="offer"]:hover{
   color:#fff;
-  background:linear-gradient(135deg, var(--accent-2), var(--accent));
+  background:var(--warm); border-color:var(--warm);
+  transform:translateY(-1px);
+  box-shadow:0 4px 14px rgba(226,166,59,.35);
 }
+.header-icons a[href*="offer"]:hover .ic{background:#fff; color:var(--warm);}
 .cart-icon-wrap{position:relative;}
 .cart-badge{
   position:absolute; top:-7px; right:-9px; background:var(--accent); color:#fff;
@@ -275,6 +292,7 @@ header{
   .header-icons{gap:14px;}
   .icon-link{font-size:0; gap:0;}
   .icon-link .ic{font-size:initial;}
+  .header-icons a[href*="offer"]{padding:9px;}
   .search-form input{padding:11px 8px 11px 16px; font-size:13.5px;}
   .search-form button{width:38px; height:38px;}
 }
