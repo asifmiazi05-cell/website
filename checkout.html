@@ -16,7 +16,7 @@
   <div class="wrap top-header">
     <a href="index.html" class="logo"><div class="logo-mark">GH</div>Gadget Haat</a>
     <form class="search-form" onsubmit="return doSearch(event)">
-      <input type="text" id="searchInput" placeholder="Search products...">
+      <input type="text" id="searchInput" aria-label="Search products" placeholder="Search products...">
       <button type="submit"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2.2"/><line x1="21" y1="21" x2="16.2" y2="16.2" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></button>
     </form>
     <div class="header-icons">
@@ -84,7 +84,7 @@
                 <div class="cs-panel">
                   <div class="cs-search-wrap">
                     <input type="text" placeholder="Search district...">
-                    <span class="cs-search-ic">🔍</span>
+                    <span class="cs-search-ic"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2.2"/><line x1="21" y1="21" x2="16.2" y2="16.2" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span>
                   </div>
                   <div class="cs-options"></div>
                 </div>
@@ -101,7 +101,7 @@
                 <div class="cs-panel">
                   <div class="cs-search-wrap">
                     <input type="text" placeholder="Search thana...">
-                    <span class="cs-search-ic">🔍</span>
+                    <span class="cs-search-ic"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2.2"/><line x1="21" y1="21" x2="16.2" y2="16.2" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span>
                   </div>
                   <div class="cs-options"></div>
                 </div>
@@ -179,7 +179,10 @@
 <div class="modal-backdrop" id="orderSuccessBackdrop">
   <div class="order-success-modal">
     <button type="button" class="modal-close" id="orderSuccessClose" aria-label="Close">✕</button>
-    <div class="os-check">✅</div>
+    <div class="os-check"><svg width="56" height="56" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="12" cy="12" r="12" fill="#4CAF50"/>
+      <path d="M7 12.5l3.2 3.2L17 9" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg></div>
     <h3>Your order has been received!</h3>
     <div class="os-order-no">Order No: <span id="osOrderNo"></span></div>
     <div class="os-items" id="osItems"></div>
