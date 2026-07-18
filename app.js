@@ -67,11 +67,23 @@ function findProductEmoji(name){
   return p ? p.emoji : '📦';
 }
 
+function cardActionsHTML(p){
+  return `<div class="card-actions">
+    <button type="button" class="card-act-btn wishlist-btn" onclick="event.stopPropagation(); this.classList.toggle('active')" aria-label="Add to wishlist" title="Wishlist">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 20.3s-7.5-4.6-10-9.3C.6 7.8 2.3 4 6 4c2 0 3.6 1.1 4.6 2.7C11.6 5.1 13.2 4 15.2 4c3.7 0 5.4 3.8 4 7-2.5 4.7-10 9.3-10 9.3Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+    </button>
+    <a class="card-act-btn" href="${productHref(p)}" onclick="event.stopPropagation();" aria-label="Quick view" title="Quick view">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M1.5 12S5 5 12 5s10.5 7 10.5 7-3.5 7-10.5 7S1.5 12 1.5 12Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.8"/></svg>
+    </a>
+  </div>`;
+}
+
 function cardHTML(p){
-  return `<div class="card" data-cat="${p.cat}" style="cursor:pointer;" onclick="if(!event.target.closest('.add-btn')) window.location.href='${productHref(p)}'">
-    <div class="card-img">${p.tag ? `<span class="discount-flag">${p.tag}</span>`:''}${p.emoji}</div>
+  return `<div class="card" data-cat="${p.cat}" style="cursor:pointer;" onclick="if(!event.target.closest('.add-btn') && !event.target.closest('.card-actions')) window.location.href='${productHref(p)}'">
+    <div class="card-img">${p.tag ? `<span class="discount-flag">${p.tag}</span>`:''}${cardActionsHTML(p)}${p.emoji}</div>
     <div class="card-body">
       <h3>${p.name}</h3>
+      ${starsHTML(p.rating)}
       <div class="price-row">
         <span class="price">${fmtPrice(p.price)}</span>
         ${p.old ? `<span class="price-old">${fmtPrice(p.old)}</span>` : ''}
@@ -87,8 +99,8 @@ function starsHTML(rating){
   return `<div class="offer-stars"><span class="star-filled">${'★'.repeat(filled)}</span><span class="star-empty">${'☆'.repeat(5 - filled)}</span></div>`;
 }
 function offerCardHTML(p){
-  return `<div class="offer-card" data-cat="${p.cat}" style="cursor:pointer;" onclick="if(!event.target.closest('.add-btn')) window.location.href='${productHref(p)}'">
-    <div class="card-img">${p.tag ? `<span class="discount-flag">${p.tag}</span>`:''}${p.emoji}</div>
+  return `<div class="offer-card" data-cat="${p.cat}" style="cursor:pointer;" onclick="if(!event.target.closest('.add-btn') && !event.target.closest('.card-actions')) window.location.href='${productHref(p)}'">
+    <div class="card-img">${p.tag ? `<span class="discount-flag">${p.tag}</span>`:''}${cardActionsHTML(p)}${p.emoji}</div>
     <div class="card-body">
       <h3>${p.name}</h3>
       ${starsHTML(p.rating)}
@@ -282,9 +294,11 @@ function addProductReview(product, review){
 }
 
 /* dark / light mode toggle */
+const THEME_ICON_MOON = '<svg viewBox="0 0 24 24" width="13" height="13" fill="none"><path d="M20.2 14.6A8.6 8.6 0 1 1 9.4 3.8a7 7 0 0 0 10.8 10.8Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>';
+const THEME_ICON_SUN = '<svg viewBox="0 0 24 24" width="13" height="13" fill="none"><circle cx="12" cy="12" r="4.3" stroke="currentColor" stroke-width="2"/><path d="M12 2.5v2.6M12 18.9v2.6M4.5 4.5l1.8 1.8M17.7 17.7l1.8 1.8M2.5 12h2.6M18.9 12h2.6M4.5 19.5l1.8-1.8M17.7 6.3l1.8-1.8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
 function updateThemeIcon(theme){
   document.querySelectorAll('.theme-toggle .theme-ic').forEach(el=>{
-    el.textContent = theme === 'dark' ? '☀️' : '🌙';
+    el.innerHTML = theme === 'dark' ? THEME_ICON_MOON : THEME_ICON_SUN;
   });
 }
 function toggleTheme(){
@@ -362,10 +376,16 @@ function renderCartDrawer(){
     cartDrawerBodyEl.innerHTML = `
       <div class="cart-drawer-empty">
         <div class="cde-icon">
-          <svg viewBox="0 0 24 24" fill="none"><path d="M3 4h2l2.4 12.2a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 2-1.6L21 8H6" stroke="var(--accent)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10" cy="21" r="1.4" fill="var(--accent)"/><circle cx="17" cy="21" r="1.4" fill="var(--accent)"/></svg>
+          <svg viewBox="0 0 36 36" fill="none">
+            <path d="M4 5h4l3.2 17a2.4 2.4 0 0 0 2.4 2h12a2.4 2.4 0 0 0 2.35-1.9L30.5 11H12" stroke="#2F7AED" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="14.5" cy="30.5" r="1.9" stroke="#2F7AED" stroke-width="1.8"/>
+            <circle cx="24.5" cy="30.5" r="1.9" stroke="#2F7AED" stroke-width="1.8"/>
+            <circle cx="27.5" cy="8.5" r="6" fill="#fff" stroke="#2F7AED" stroke-width="1.8"/>
+            <path d="M25.3 6.3l4.4 4.4M29.7 6.3l-4.4 4.4" stroke="#2F7AED" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
         </div>
-        <p>Your cart is empty!</p>
-        <a href="shop.html">Start Shopping →</a>
+        <p>No items in your cart!</p>
+        <a href="shop.html">Start Shopping</a>
       </div>`;
     cartDrawerFootEl.innerHTML = '';
     return;
@@ -374,12 +394,14 @@ function renderCartDrawer(){
     <div class="cdr-item">
       <div class="cdr-emoji">${findProductEmoji(i.name)}</div>
       <div class="cdr-info">
-        <div class="cdr-name">${i.name}</div>
-        <div class="cdr-price">${fmtPrice(i.price)}</div>
-        <div class="cdr-qty">
-          <button type="button" onclick="changeQty('${i.name.replace(/'/g,"")}', -1)"><svg width="10" height="10" viewBox="0 0 24 24" fill="none"><path d="M4 12h16" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg></button>
-          <span>${i.qty}</span>
-          <button type="button" onclick="changeQty('${i.name.replace(/'/g,"")}', 1)"><svg width="10" height="10" viewBox="0 0 24 24" fill="none"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg></button>
+        <div class="cdr-name">${i.name || 'Product'}</div>
+        <div class="cdr-qty-row">
+          <div class="cdr-qty">
+            <button type="button" onclick="changeQty('${i.name.replace(/'/g,"")}', -1)"><svg width="10" height="10" viewBox="0 0 24 24" fill="none"><path d="M4 12h16" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg></button>
+            <span>${i.qty}</span>
+            <button type="button" onclick="changeQty('${i.name.replace(/'/g,"")}', 1)"><svg width="10" height="10" viewBox="0 0 24 24" fill="none"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg></button>
+          </div>
+          <div class="cdr-price">× ${fmtPrice(i.price)} = ${fmtPrice(i.price * i.qty)}</div>
         </div>
       </div>
       <button type="button" class="cdr-remove" onclick="removeFromCart('${i.name.replace(/'/g,"")}')">✕</button>
@@ -388,7 +410,7 @@ function renderCartDrawer(){
   const subtotal = items.reduce((s,i)=>s+i.price*i.qty, 0);
   cartDrawerFootEl.innerHTML = `
     <div class="cdf-row"><span>Subtotal</span><b>${fmtPrice(subtotal)}</b></div>
-    <a href="checkout.html" class="cdf-btn">Go to Checkout →</a>`;
+    <a href="checkout.html" class="cdf-btn">CHECKOUT</a>`;
 }
 
 function openCartDrawer(){
@@ -425,32 +447,28 @@ function initScrollTop(){
   const wrap = document.createElement('div');
   wrap.className = 'scroll-top-wrap';
   wrap.innerHTML = `
-    <svg class="stp-swoosh" width="58" height="58" viewBox="0 0 58 58">
-      <circle cx="29" cy="29" r="26" fill="none" stroke="#FF7A1A" stroke-width="2.5"
-        stroke-linecap="round" stroke-dasharray="26 148" stroke-dashoffset="-90" opacity=".5"/>
-      <circle cx="29" cy="29" r="26" fill="none" stroke="#FF7A1A" stroke-width="2.5"
-        stroke-linecap="round" stroke-dasharray="11 163" stroke-dashoffset="-122" opacity=".3"/>
-    </svg>
     <button type="button" class="scroll-top-btn" id="scrollTopBtn" aria-label="Back to top">
       <svg class="stp-chevron" viewBox="0 0 24 24" fill="none">
-        <path d="M6 15l6-6 6 6" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M6 13.5l6-6 6 6" stroke="#111111" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M6 19l6-6 6 6" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
     </button>`;
   document.documentElement.appendChild(wrap);
 
   const btn = wrap.querySelector('#scrollTopBtn');
-  const swoosh = wrap.querySelector('.stp-swoosh');
 
   function update(){
     const scrollTop = window.scrollY || document.documentElement.scrollTop;
-    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-    const pct = docHeight > 0 ? Math.min(scrollTop / docHeight, 1) : 0;
-    swoosh.style.transform = `rotate(${pct * 360}deg)`;
-    const showThreshold = docHeight > 0 ? Math.min(300, docHeight * 0.35) : Infinity;
-    wrap.classList.toggle('show', scrollTop > showThreshold);
+    const showAt = 300;
+    wrap.classList.toggle('show', scrollTop > showAt);
+
+    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+    const fillProgress = maxScroll > showAt
+      ? Math.max(0, Math.min(1, (scrollTop - showAt) / (maxScroll - showAt)))
+      : 1;
+    btn.style.backgroundPosition = `0 ${fillProgress * 100}%`;
   }
   window.addEventListener('scroll', update, {passive:true});
-  window.addEventListener('resize', update);
   btn.addEventListener('click', ()=>window.scrollTo({top:0, behavior:'smooth'}));
   update();
 }
