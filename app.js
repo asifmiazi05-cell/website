@@ -112,8 +112,10 @@ function findProductEmoji(name){
 }
 
 function cardActionsHTML(p){
+  const name = p.name.replace(/'/g,"");
+  const wished = isWishlisted(p.name);
   return `<div class="card-actions">
-    <button type="button" class="card-act-btn wishlist-btn" onclick="event.stopPropagation(); this.classList.toggle('active')" aria-label="Add to wishlist" title="Wishlist">
+    <button type="button" class="card-act-btn wishlist-btn${wished ? ' active' : ''}" data-name="${name}" onclick="event.stopPropagation(); toggleWishlist('${name}', this)" aria-label="Add to wishlist" title="Wishlist">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 20.3s-7.5-4.6-10-9.3C.6 7.8 2.3 4 6 4c2 0 3.6 1.1 4.6 2.7C11.6 5.1 13.2 4 15.2 4c3.7 0 5.4 3.8 4 7-2.5 4.7-10 9.3-10 9.3Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
     </button>
     <a class="card-act-btn" href="${productHref(p)}" onclick="event.stopPropagation();" aria-label="Quick view" title="Quick view">
@@ -307,6 +309,51 @@ function changeQty(name, delta){
   if(typeof renderCheckoutSummary === 'function') renderCheckoutSummary();
 }
 document.addEventListener('DOMContentLoaded', updateCartBadge);
+
+/* wishlist — persisted list of product names, mirrors the cart storage pattern */
+let _wishlistCache = null;
+function getWishlistItems(){
+  if(_wishlistCache !== null) return _wishlistCache;
+  try{
+    _wishlistCache = JSON.parse(localStorage.getItem('gh_wishlist_items') || '[]');
+  }catch(e){
+    _wishlistCache = [];
+  }
+  return _wishlistCache;
+}
+function saveWishlistItems(items){
+  _wishlistCache = items;
+  try{
+    localStorage.setItem('gh_wishlist_items', JSON.stringify(items));
+  }catch(e){
+    console.warn('wishlist storage failed, using in-memory wishlist only:', e);
+  }
+  updateWishlistBadge();
+}
+function isWishlisted(name){
+  return getWishlistItems().includes(name);
+}
+function toggleWishlist(name, btnEl){
+  const items = getWishlistItems();
+  const idx = items.indexOf(name);
+  let added;
+  if(idx > -1){ items.splice(idx, 1); added = false; }
+  else{ items.push(name); added = true; }
+  saveWishlistItems(items);
+  document.querySelectorAll('.wishlist-btn').forEach(btn=>{
+    if(btn.dataset.name === name) btn.classList.toggle('active', added);
+  });
+  if(typeof mode !== 'undefined' && mode === 'wishlist' && typeof renderResults === 'function') renderResults();
+  return added;
+}
+function updateWishlistBadge(){
+  const count = getWishlistItems().length;
+  document.querySelectorAll('#wishlistCount').forEach(el=>{
+    el.textContent = count;
+    el.classList.toggle('hide', count === 0);
+  });
+}
+document.addEventListener('DOMContentLoaded', updateWishlistBadge);
 
 /* per-product customer reviews (default reviews + reader-submitted, persisted) */
 function reviewStorageKey(product){
