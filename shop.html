@@ -177,7 +177,10 @@
     }
     brandList.innerHTML = brands.map(b=>`
       <label class="brand-item${selectedBrands.has(b) ? ' checked' : ''}">
-        <input type="checkbox" value="${b}" ${selectedBrands.has(b) ? 'checked' : ''}>
+        <span class="cb-box">
+          <input type="checkbox" value="${b}" ${selectedBrands.has(b) ? 'checked' : ''}>
+          <span class="cb-mark"><svg viewBox="0 0 16 16" fill="none"><path d="M3.5 8.2 6.4 11l6.1-6.4" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </span>
         <span class="b-name">${b}</span>
         <span class="b-count">${counts[b]}</span>
       </label>

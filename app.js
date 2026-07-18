@@ -1,16 +1,52 @@
 const products = [
-  {emoji:'🎧', name:'Wireless Earbuds', price:2300, old:2500, tag:'-8%', cat:'audio', brand:'JBL', rating:4.5},
-  {emoji:'⌚', name:'Smartwatch Pro', price:3200, old:3400, tag:'-6%', cat:'watch', brand:'Amazfit', rating:4},
-  {emoji:'🔋', name:'20,000mAh Power Bank', price:2200, old:2450, tag:'-10%', cat:'power', brand:'Anker', rating:5},
-  {emoji:'🔊', name:'Bluetooth Speaker', price:1984, old:2200, tag:'-10%', cat:'audio', brand:'Xiaomi', rating:4.5},
-  {emoji:'🖱️', name:'Gaming Mouse RGB', price:1500, old:null, tag:null, cat:'gaming', brand:'Logitech', rating:4},
-  {emoji:'💡', name:'Smart LED Strip Light', price:650, old:null, tag:null, cat:'light', brand:'Xiaomi', rating:4},
-  {emoji:'⌨️', name:'Mechanical Keyboard', price:2800, old:3100, tag:'-9%', cat:'gaming', brand:'Logitech', rating:5},
-  {emoji:'📷', name:'Webcam 1080p', price:1750, old:null, tag:null, cat:'camera', brand:'Logitech', rating:4},
-  {emoji:'🔌', name:'65W GaN Charger', price:1400, old:1600, tag:'-13%', cat:'charge', brand:'Ugreen', rating:4.5},
-  {emoji:'🧵', name:'USB-C Braided Cable', price:350, old:null, tag:null, cat:'charge', brand:'Anker', rating:4},
-  {emoji:'📸', name:'Ring Light + Tripod', price:1200, old:1450, tag:'-17%', cat:'camera', brand:'Xiaomi', rating:4.5},
-  {emoji:'🎮', name:'Gamepad Controller', price:2100, old:null, tag:null, cat:'gaming', brand:'Sony', rating:5},
+  {emoji:'🎧', name:'Wireless Earbuds', price:2300, old:2500, tag:'-8%', cat:'audio', brand:'JBL', rating:4.5,
+    desc:["JBL Wireless Earbuds deliver clear, punchy sound with deep bass and crisp highs, tuned for music, calls, and gaming alike.","With a compact charging case and touch controls, they're built for everyday use — commuting, working out, or long calls — without wires getting in the way."],
+    features:["Bluetooth 5.3 connectivity","Up to 24 hours total playtime with case","IPX4 sweat and splash resistant","Touch controls for play, pause, and calls","Built-in mic for clear calls"],
+    reviews:[{name:"Rakibul Hasan", date:"May 14, 2026", rating:5, text:"Sound quality is really impressive for the price. Bass is strong and battery easily lasts me the whole day."}]},
+  {emoji:'⌚', name:'Smartwatch Pro', price:3200, old:3400, tag:'-6%', cat:'watch', brand:'Amazfit', rating:4,
+    desc:["The Amazfit Smartwatch Pro tracks your heart rate, sleep, and daily activity around the clock, with a bright always-on display that's easy to read in sunlight.","It pairs with your phone for call and message alerts, so you can stay connected without constantly checking your phone."],
+    features:["1.43\" AMOLED always-on display","Heart rate & SpO2 monitoring","Up to 7 days battery life","100+ sports modes","Call & notification alerts"],
+    reviews:[{name:"Mahmudul Karim", date:"Apr 22, 2026", rating:4, text:"Battery life is great and the screen looks premium. Companion app could be a bit smoother, but overall very happy."}]},
+  {emoji:'🔋', name:'20,000mAh Power Bank', price:2200, old:2450, tag:'-10%', cat:'power', brand:'Anker', rating:5,
+    desc:["This Anker 20,000mAh Power Bank holds enough charge to top up a phone multiple times or keep a laptop running through a busy travel day.","Dual output ports and fast-charging support mean you can charge two devices at once without waiting around."],
+    features:["20,000mAh high-capacity battery","18W fast charging (dual output)","LED battery level indicator","Safe-charge protection circuitry","Compact, travel-friendly design"],
+    reviews:[{name:"Sadia Islam", date:"June 05, 2026", rating:5, text:"Ordered this online and it arrived the very next day with the warranty card included. Charges my phone fully more than three times."}]},
+  {emoji:'🔊', name:'Bluetooth Speaker', price:1984, old:2200, tag:'-10%', cat:'audio', brand:'Xiaomi', rating:4.5,
+    desc:["The Xiaomi Bluetooth Speaker fills a room with warm, balanced sound from a compact body that's easy to carry from the living room to the balcony.","A rechargeable battery keeps the music going for hours, and simple one-button pairing gets you connected in seconds."],
+    features:["360° immersive sound","10+ hours playtime per charge","IPX5 water-resistant body","Bluetooth 5.0 fast pairing","Built-in mic for hands-free calls"],
+    reviews:[{name:"Tania Rahman", date:"May 02, 2026", rating:5, text:"Great sound for such a small speaker. I use it every evening on the balcony and the battery still has plenty left the next day."}]},
+  {emoji:'🖱️', name:'Gaming Mouse RGB', price:1500, old:null, tag:null, cat:'gaming', brand:'Logitech', rating:4,
+    desc:["Built for fast, accurate gameplay, this Logitech RGB gaming mouse uses a high-precision sensor that tracks every movement without lag.","Customizable RGB lighting and programmable buttons let you set it up exactly the way you play, whether it's FPS, MOBA, or everyday use."],
+    features:["High-precision optical sensor","Customizable RGB lighting","6 programmable buttons","Ergonomic grip for long sessions","Braided cable for durability"],
+    reviews:[{name:"Shovon Ahmed", date:"Mar 18, 2026", rating:4, text:"Very responsive and comfortable to hold for long gaming sessions. RGB lighting looks great too."}]},
+  {emoji:'💡', name:'Smart LED Strip Light', price:650, old:null, tag:null, cat:'light', brand:'Xiaomi', rating:4,
+    desc:["Transform any room with this Xiaomi Smart LED Strip Light — millions of colors, adjustable brightness, and app control right from your phone.","It's simple to install with adhesive backing, and works great behind a TV, desk, or shelf for instant ambient lighting."],
+    features:["16 million colors, app-controlled","Music sync mode","Easy adhesive installation","Adjustable brightness & scenes","Cuttable & extendable strip"],
+    reviews:[{name:"Nabila Sultana", date:"Feb 27, 2026", rating:4, text:"Easy to set up and the colors look really vibrant. Great for adding a mood-lighting touch behind my desk."}]},
+  {emoji:'⌨️', name:'Mechanical Keyboard', price:2800, old:3100, tag:'-9%', cat:'gaming', brand:'Logitech', rating:5,
+    desc:["This Logitech Mechanical Keyboard combines tactile, satisfying keystrokes with a sturdy build designed to handle years of typing and gaming.","Backlit keys and a compact layout make it just as good for late-night coding sessions as it is for competitive gaming."],
+    features:["Tactile mechanical switches","Per-key RGB backlighting","Durable aluminum-top frame","Anti-ghosting, N-key rollover","Detachable USB-C cable"],
+    reviews:[{name:"Imtiaz Chowdhury", date:"Jan 30, 2026", rating:5, text:"Typing feel is excellent and it looks premium on my desk. Worth the extra price over a regular keyboard."}]},
+  {emoji:'📷', name:'Webcam 1080p', price:1750, old:null, tag:null, cat:'camera', brand:'Logitech', rating:4,
+    desc:["Get sharp, clear video calls with this Logitech 1080p Webcam, built for remote meetings, online classes, and streaming.","Auto light correction keeps you looking clear even in dim rooms, and it clips onto any monitor in seconds."],
+    features:["Full HD 1080p video","Auto light correction","Built-in noise-reducing mic","Wide-angle lens","Universal monitor clip"],
+    reviews:[{name:"Ayesha Siddika", date:"Apr 09, 2026", rating:4, text:"Video quality is noticeably better than my laptop's built-in camera. Great for work-from-home video calls."}]},
+  {emoji:'🔌', name:'65W GaN Charger', price:1400, old:1600, tag:'-13%', cat:'charge', brand:'Ugreen', rating:4.5,
+    desc:["Small enough to fit in your pocket, this Ugreen 65W GaN Charger can power a laptop, tablet, and phone with fast, safe charging.","GaN technology means less heat and a smaller size than traditional chargers, without giving up any charging speed."],
+    features:["65W fast charging output","Compact GaN design","Multi-device protection circuitry","Compatible with laptops, tablets & phones","Foldable plug for easy travel"],
+    reviews:[{name:"Rezaul Karim", date:"May 21, 2026", rating:5, text:"Charges my laptop and phone at the same speed as the original chargers, but it's way smaller and easier to carry."}]},
+  {emoji:'🧵', name:'USB-C Braided Cable', price:350, old:null, tag:null, cat:'charge', brand:'Anker', rating:4,
+    desc:["This Anker USB-C Braided Cable is built to survive daily bending and tugging, with a reinforced nylon exterior that resists fraying.","It supports fast charging and quick data transfer, so it's equally handy for charging your phone or backing up files."],
+    features:["Durable nylon-braided exterior","Supports fast charging","Reinforced connector joints","480Mbps data transfer","1-meter length"],
+    reviews:[{name:"Farzana Akter", date:"Mar 05, 2026", rating:4, text:"Feels much sturdier than the cable that came with my phone. Charges quickly and hasn't frayed after months of use."}]},
+  {emoji:'📸', name:'Ring Light + Tripod', price:1200, old:1450, tag:'-17%', cat:'camera', brand:'Xiaomi', rating:4.5,
+    desc:["This Xiaomi Ring Light + Tripod set gives your videos and photos even, flattering lighting — perfect for content creation, video calls, or livestreams.","The adjustable tripod extends to a comfortable height and folds down small enough to pack for travel shoots."],
+    features:["Adjustable brightness & color temperature","Extendable tripod stand","Phone clip with 360° rotation","USB-powered LED ring","Foldable, travel-friendly design"],
+    reviews:[{name:"Sabrina Islam", date:"Feb 14, 2026", rating:5, text:"My video calls and reels look so much better with proper lighting now. Easy to set up and pack away."}]},
+  {emoji:'🎮', name:'Gamepad Controller', price:2100, old:null, tag:null, cat:'gaming', brand:'Sony', rating:5,
+    desc:["Designed for comfort during marathon gaming sessions, this Sony Gamepad Controller offers precise analog sticks and responsive triggers.","It connects wirelessly to your console or PC, giving you the freedom to play from the couch without cable clutter."],
+    features:["Wireless Bluetooth connectivity","Precision analog sticks","Responsive trigger buttons","Rechargeable battery, ~20hr life","Compatible with PC & console"],
+    reviews:[{name:"Jubayer Alam", date:"Jun 11, 2026", rating:5, text:"Feels exactly like the original console controller. Pairs instantly and the battery lasts through long sessions."}]},
 ];
 
 const categoryNames = {
@@ -26,6 +62,11 @@ function productHref(p){
   return `product.html?name=${encodeURIComponent(p.name)}`;
 }
 
+function findProductEmoji(name){
+  const p = products.find(p => p.name === name);
+  return p ? p.emoji : '📦';
+}
+
 function cardHTML(p){
   return `<div class="card" data-cat="${p.cat}" style="cursor:pointer;" onclick="if(!event.target.closest('.add-btn')) window.location.href='${productHref(p)}'">
     <div class="card-img">${p.tag ? `<span class="discount-flag">${p.tag}</span>`:''}${p.emoji}</div>
@@ -35,7 +76,7 @@ function cardHTML(p){
         <span class="price">${fmtPrice(p.price)}</span>
         ${p.old ? `<span class="price-old">${fmtPrice(p.old)}</span>` : ''}
       </div>
-      <button class="add-btn" onclick="event.stopPropagation(); addToCart('${p.name.replace(/'/g,"")}', ${p.price})">Add to Cart</button>
+      <button class="add-btn" onclick="event.stopPropagation(); addToCart('${p.name.replace(/'/g,"")}', ${p.price})"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M3 4h2l2.4 12.2a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 2-1.6L21 8H6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10" cy="21" r="1.4" fill="currentColor"/><circle cx="17" cy="21" r="1.4" fill="currentColor"/></svg> Add to Cart</button>
     </div>
   </div>`;
 }
@@ -55,7 +96,7 @@ function offerCardHTML(p){
         <span class="price">${fmtPrice(p.price)}</span>
         ${p.old ? `<span class="price-old">${fmtPrice(p.old)}</span>` : ''}
       </div>
-      <button class="add-btn" onclick="event.stopPropagation(); addToCart('${p.name.replace(/'/g,"")}', ${p.price})">Add to Cart</button>
+      <button class="add-btn" onclick="event.stopPropagation(); addToCart('${p.name.replace(/'/g,"")}', ${p.price})"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M3 4h2l2.4 12.2a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 2-1.6L21 8H6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10" cy="21" r="1.4" fill="currentColor"/><circle cx="17" cy="21" r="1.4" fill="currentColor"/></svg> Add to Cart</button>
     </div>
   </div>`;
 }
@@ -211,6 +252,35 @@ function changeQty(name, delta){
 }
 document.addEventListener('DOMContentLoaded', updateCartBadge);
 
+/* per-product customer reviews (default reviews + reader-submitted, persisted) */
+function reviewStorageKey(product){
+  return 'gh_reviews_' + product.name;
+}
+function getProductReviews(product){
+  let extra = [];
+  try{
+    extra = JSON.parse(localStorage.getItem(reviewStorageKey(product)) || '[]');
+  }catch(e){
+    extra = [];
+  }
+  return [...(product.reviews || []), ...extra];
+}
+function addProductReview(product, review){
+  let extra = [];
+  try{
+    extra = JSON.parse(localStorage.getItem(reviewStorageKey(product)) || '[]');
+  }catch(e){
+    extra = [];
+  }
+  extra.push(review);
+  try{
+    localStorage.setItem(reviewStorageKey(product), JSON.stringify(extra));
+  }catch(e){
+    console.warn('review storage failed:', e);
+  }
+  return [...(product.reviews || []), ...extra];
+}
+
 /* dark / light mode toggle */
 function updateThemeIcon(theme){
   document.querySelectorAll('.theme-toggle .theme-ic').forEach(el=>{
@@ -302,14 +372,14 @@ function renderCartDrawer(){
   }
   cartDrawerBodyEl.innerHTML = items.map(i => `
     <div class="cdr-item">
-      <div class="cdr-emoji">🛍️</div>
+      <div class="cdr-emoji">${findProductEmoji(i.name)}</div>
       <div class="cdr-info">
         <div class="cdr-name">${i.name}</div>
         <div class="cdr-price">${fmtPrice(i.price)}</div>
         <div class="cdr-qty">
-          <button type="button" onclick="changeQty('${i.name.replace(/'/g,"")}', -1)">-</button>
+          <button type="button" onclick="changeQty('${i.name.replace(/'/g,"")}', -1)"><svg width="10" height="10" viewBox="0 0 24 24" fill="none"><path d="M4 12h16" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg></button>
           <span>${i.qty}</span>
-          <button type="button" onclick="changeQty('${i.name.replace(/'/g,"")}', 1)">+</button>
+          <button type="button" onclick="changeQty('${i.name.replace(/'/g,"")}', 1)"><svg width="10" height="10" viewBox="0 0 24 24" fill="none"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg></button>
         </div>
       </div>
       <button type="button" class="cdr-remove" onclick="removeFromCart('${i.name.replace(/'/g,"")}')">✕</button>

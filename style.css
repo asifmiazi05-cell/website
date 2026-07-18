@@ -349,32 +349,42 @@ header{
 /* product grid */
 .grid{display:grid; grid-template-columns:repeat(4, 1fr); gap:20px;}
 .card{
-  background:var(--card); border:none; border-radius:var(--radius);
-  overflow:hidden; display:flex; flex-direction:column; transition:transform .18s ease, box-shadow .18s ease;
-  box-shadow:0 1px 3px rgba(16,24,40,.06);
+  background:var(--card); border:1px solid var(--border); border-radius:16px;
+  overflow:hidden; display:flex; flex-direction:column;
+  transition:transform .25s cubic-bezier(.2,.8,.2,1), box-shadow .25s ease, border-color .25s ease;
+  box-shadow:0 1px 3px rgba(16,24,40,.05);
 }
-.card:hover{transform:translateY(-4px); box-shadow:0 8px 20px rgba(16,24,40,.10);}
+.card:hover{
+  transform:translateY(-6px); border-color:var(--accent);
+  box-shadow:0 16px 32px rgba(255,122,26,.16);
+}
 .card-img{
   height:150px; display:flex; align-items:center; justify-content:center; font-size:56px;
-  background:radial-gradient(circle at 30% 20%, rgba(228,20,29,.10), transparent 55%), var(--bg-alt);
-  position:relative;
+  background:radial-gradient(circle at 30% 20%, var(--accent-dim), transparent 60%), var(--bg-alt);
+  position:relative; overflow:hidden; transition:transform .35s ease;
 }
+.card:hover .card-img{transform:scale(1.06);}
 .discount-flag{
   position:absolute; top:10px; left:10px;
-  background:var(--warm); color:#241300; font-size:11px; font-weight:700;
-  padding:3px 8px; border-radius:6px; font-family:'Plus Jakarta Sans','Noto Sans Bengali';
+  background:linear-gradient(135deg, var(--accent), var(--accent-2)); color:#fff; font-size:11px; font-weight:700;
+  padding:4px 11px; border-radius:999px; font-family:'Plus Jakarta Sans','Noto Sans Bengali';
+  box-shadow:0 3px 8px rgba(255,122,26,.35);
 }
 .card-body{padding:16px; display:flex; flex-direction:column; gap:8px; flex:1;}
-.card-body h3{font-size:15px; font-weight:600; line-height:1.3;}
+.card-body h3{font-size:15px; font-weight:600; line-height:1.3; transition:color .15s ease;}
+.card:hover .card-body h3{color:var(--accent);}
 .price-row{display:flex; align-items:baseline; gap:8px; flex-wrap:wrap;}
-.price{font-family:'Plus Jakarta Sans','Noto Sans Bengali'; font-weight:700; font-size:16px; color:var(--accent);}
+.price{font-family:'Plus Jakarta Sans','Noto Sans Bengali'; font-weight:800; font-size:16px; color:var(--accent);}
 .price-old{font-family:'Plus Jakarta Sans','Noto Sans Bengali'; font-size:13px; color:var(--text-dim); text-decoration:line-through;}
 .add-btn{
-  margin-top:auto; width:100%; padding:10px; border-radius:8px; border:1px solid var(--accent);
-  background:#fff; color:var(--accent); font-weight:600; font-size:13.5px; cursor:pointer;
-  transition:.15s;
+  margin-top:auto; width:100%; padding:11px; border-radius:999px; border:1px solid var(--accent);
+  background:var(--accent); color:#fff; font-weight:700; font-size:13.5px; cursor:pointer;
+  display:flex; align-items:center; justify-content:center; gap:6px;
+  transition:background .15s ease, box-shadow .15s ease, transform .1s ease;
 }
-.add-btn:hover{background:var(--accent); color:var(--on-accent); border-color:var(--accent);}
+.add-btn svg{flex-shrink:0;}
+.add-btn:hover{background:var(--accent-hover); border-color:var(--accent-hover); box-shadow:0 8px 18px rgba(255,122,26,.3);}
+.add-btn:active{transform:scale(.96);}
 
 /* offer-style product box (badge overlaps border, grid, see-all footer) */
 .offer-box{
@@ -400,21 +410,47 @@ header{
 .offer-timer span{display:block; font-size:8px; color:var(--text-dim); font-weight:400;}
 .offer-grid{display:grid; grid-template-columns:repeat(6, 1fr); gap:18px;}
 .offer-card{
-  background:var(--bg-alt); border:none; border-radius:10px;
-  overflow:hidden; display:flex; flex-direction:column; transition:transform .18s ease, box-shadow .18s ease;
-  box-shadow:0 1px 3px rgba(16,24,40,.06);
+  background:var(--bg-alt); border:1px solid var(--border); border-radius:16px;
+  overflow:hidden; display:flex; flex-direction:column;
+  transition:transform .25s cubic-bezier(.2,.8,.2,1), box-shadow .25s ease, border-color .25s ease;
+  box-shadow:0 1px 3px rgba(16,24,40,.05);
 }
-.offer-card:hover{transform:translateY(-4px); box-shadow:0 6px 16px rgba(16,24,40,.10);}
-.offer-card .card-img{height:120px; font-size:44px;}
-.offer-card .card-body{padding:12px; gap:6px;}
-.offer-card .card-body h3{font-size:13px; font-weight:600; line-height:1.35; min-height:34px;}
+.offer-card:hover{
+  transform:translateY(-6px); border-color:var(--accent);
+  box-shadow:0 16px 32px rgba(255,122,26,.16);
+}
+.offer-card .card-img{
+  height:128px; font-size:46px; position:relative; overflow:hidden;
+  background:radial-gradient(circle at 30% 20%, var(--accent-dim), transparent 60%), var(--bg-alt);
+  transition:transform .35s ease;
+}
+.offer-card:hover .card-img{transform:scale(1.06);}
+.offer-card .discount-flag{
+  top:9px; left:9px; background:linear-gradient(135deg, var(--accent), var(--accent-2));
+  color:#fff; border-radius:999px; padding:4px 11px; font-size:10.5px;
+  box-shadow:0 3px 8px rgba(255,122,26,.35);
+}
+.offer-card .card-body{padding:14px; gap:7px;}
+.offer-card .card-body h3{
+  font-size:13.5px; font-weight:600; line-height:1.4; min-height:37px; transition:color .15s ease;
+}
+.offer-card:hover .card-body h3{color:var(--accent);}
 .offer-stars{display:flex; gap:2px; font-size:12px;}
 .offer-stars .star-filled{color:var(--warm);}
 .offer-stars .star-empty{color:var(--border);}
 [data-theme="dark"] .offer-stars .star-empty{color:#4A4E5C;}
-.offer-card .price-row{margin-top:2px;}
-.offer-card .price{font-size:15px;}
-.offer-card .add-btn{padding:8px; font-size:12px; margin-top:auto;}
+.offer-card .price-row{margin-top:2px; gap:7px;}
+.offer-card .price{font-size:16px; font-weight:800;}
+.offer-card .price-old{font-size:11.5px;}
+.offer-card .add-btn{
+  margin-top:auto; padding:9px; font-size:12.5px; font-weight:700; border-radius:999px;
+  background:var(--accent); color:#fff; border:1px solid var(--accent);
+  display:flex; align-items:center; justify-content:center; gap:6px;
+  transition:background .15s ease, box-shadow .15s ease, transform .1s ease;
+}
+.offer-card .add-btn svg{flex-shrink:0;}
+.offer-card .add-btn:hover{background:var(--accent-hover); border-color:var(--accent-hover); box-shadow:0 8px 18px rgba(255,122,26,.3);}
+.offer-card .add-btn:active{transform:scale(.96);}
 .offer-footer{display:flex; justify-content:flex-end; margin-top:22px; padding-top:18px; border-top:1px solid var(--border);}
 .see-all-btn{
   display:inline-flex; align-items:center; gap:8px; background:var(--text); color:var(--bg);
@@ -536,12 +572,23 @@ header{
   display:flex; align-items:center; gap:10px; padding:7px 6px; border-radius:8px; cursor:pointer; font-size:13.5px;
 }
 .brand-item:hover{background:var(--bg-alt);}
-.brand-item input{accent-color:var(--accent); width:15px; height:15px; cursor:pointer; flex:0 0 auto;}
+.cb-box{position:relative; width:19px; height:19px; flex:0 0 auto; display:flex;}
+.cb-box input{position:absolute; inset:0; opacity:0; margin:0; cursor:pointer;}
+.cb-mark{
+  width:19px; height:19px; border-radius:6px; border:1.6px solid var(--border);
+  background:var(--card); display:flex; align-items:center; justify-content:center;
+  transition:background .15s ease, border-color .15s ease, transform .1s ease;
+}
+.cb-mark svg{width:12px; height:12px; opacity:0; transform:scale(.5); transition:opacity .15s ease, transform .15s ease;}
+.brand-item:hover .cb-mark{border-color:var(--accent);}
+.cb-box input:checked ~ .cb-mark{background:var(--accent); border-color:var(--accent);}
+.cb-box input:checked ~ .cb-mark svg{opacity:1; transform:scale(1);}
+.cb-box input:active ~ .cb-mark{transform:scale(.9);}
 .brand-item .b-name{flex:1; font-weight:500; letter-spacing:.02em;}
 .brand-item.checked .b-name{color:var(--accent);}
 .brand-item .b-count{
-  background:var(--bg-alt); border:1px solid var(--border); color:var(--text-dim);
-  font-size:11px; padding:2px 8px; border-radius:999px; font-family:'Plus Jakarta Sans','Noto Sans Bengali';
+  background:var(--bg-alt); border:1px solid var(--border); color:var(--text);
+  font-size:11.5px; font-weight:700; padding:2px 9px; border-radius:999px; font-family:'Plus Jakarta Sans','Noto Sans Bengali';
 }
 
 .empty-banner{
@@ -650,14 +697,15 @@ form{background:var(--card); border:1px solid var(--border); border-radius:var(-
 .review-info{flex:1; min-width:0;}
 .review-info h4{font-size:15px; font-weight:600; margin-bottom:8px; color:#000000; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
 .qty-price-row{display:flex; align-items:center; gap:12px;}
-.qty-stepper{display:inline-flex; align-items:center; gap:2px; background:var(--bg-alt); border-radius:20px; padding:3px; flex-shrink:0;}
+.qty-stepper{display:inline-flex; align-items:center; gap:2px; background:var(--bg-alt); border:1px solid var(--border); border-radius:20px; padding:3px; flex-shrink:0;}
 .qty-stepper button{
-  width:22px; height:22px; border-radius:50%; border:none; background:transparent;
+  width:24px; height:24px; border-radius:50%; border:none; background:transparent;
   color:var(--text-dim); font-size:14px; cursor:pointer; display:flex; align-items:center; justify-content:center; padding:0;
+  transition:background .15s ease, color .15s ease, transform .1s ease;
 }
-.qty-stepper button:last-of-type{color:var(--accent);}
-.qty-stepper button:hover{color:var(--accent);}
-.qty-stepper .qty-val{font-family:'Plus Jakarta Sans','Noto Sans Bengali'; font-size:14px; min-width:16px; text-align:center; font-weight:700; color:#000000; padding:0 6px;}
+.qty-stepper button:hover{background:var(--accent); color:#fff;}
+.qty-stepper button:active{transform:scale(.88);}
+.qty-stepper .qty-val{font-family:'Plus Jakarta Sans','Noto Sans Bengali'; font-size:14px; min-width:20px; text-align:center; font-weight:700; color:#000000; padding:0 4px;}
 .review-price{font-family:'Plus Jakarta Sans','Noto Sans Bengali'; font-size:14px; color:#000000; flex-shrink:0; white-space:nowrap;}
 .review-delete{
   width:30px; height:30px; border-radius:8px; border:none; background:var(--danger); color:#fff;
@@ -902,14 +950,28 @@ footer{background:var(--hdr-bg); color:var(--hdr-text-dim);}
 .cdr-item .cdr-info{flex:1; min-width:0;}
 .cdr-item .cdr-name{font-size:13.5px; font-weight:600; margin-bottom:4px;}
 .cdr-item .cdr-price{font-family:'Plus Jakarta Sans','Noto Sans Bengali'; font-size:12.5px; color:var(--accent); font-weight:700;}
-.cdr-item .cdr-qty{display:flex; align-items:center; gap:8px; margin-top:6px;}
-.cdr-item .cdr-qty button{
-  width:22px; height:22px; border-radius:6px; border:1px solid var(--border); background:var(--card);
-  cursor:pointer; font-size:13px; line-height:1; color:var(--text);
+.cdr-item .cdr-qty{
+  display:inline-flex; align-items:center; gap:0; margin-top:8px;
+  border:1px solid var(--border); border-radius:999px; background:var(--bg-alt); padding:2px;
 }
-.cdr-item .cdr-qty button:hover{border-color:var(--accent); color:var(--accent);}
-.cdr-item .cdr-qty span{font-family:'Plus Jakarta Sans','Noto Sans Bengali'; font-size:12.5px; min-width:16px; text-align:center;}
-.cdr-item .cdr-remove{background:none; border:none; color:var(--danger); font-size:13px; cursor:pointer; flex-shrink:0;}
+.cdr-item .cdr-qty button{
+  width:24px; height:24px; border-radius:50%; border:none; background:transparent;
+  cursor:pointer; font-size:14px; line-height:1; color:var(--text-dim); font-weight:700;
+  display:flex; align-items:center; justify-content:center;
+  transition:background .15s ease, color .15s ease, transform .1s ease;
+}
+.cdr-item .cdr-qty button:hover{background:var(--accent); color:#fff;}
+.cdr-item .cdr-qty button:active{transform:scale(.88);}
+.cdr-item .cdr-qty span{
+  font-family:'Plus Jakarta Sans','Noto Sans Bengali'; font-size:13px; font-weight:700;
+  color:var(--text); min-width:22px; text-align:center;
+}
+.cdr-item .cdr-remove{
+  background:none; border:none; color:var(--text-dim); font-size:13px; cursor:pointer; flex-shrink:0;
+  width:26px; height:26px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+  transition:background .15s ease, color .15s ease;
+}
+.cdr-item .cdr-remove:hover{background:var(--accent-dim); color:var(--danger);}
 .cart-drawer-foot{padding:18px 22px 22px; border-top:1px solid var(--border); flex-shrink:0;}
 .cart-drawer-foot .cdf-row{display:flex; justify-content:space-between; font-size:14px; margin-bottom:14px;}
 .cart-drawer-foot .cdf-row b{color:var(--accent); font-family:'Plus Jakarta Sans','Noto Sans Bengali';}

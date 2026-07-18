@@ -410,9 +410,9 @@
             <h4>${i.name}</h4>
             <div class="qty-price-row">
               <div class="qty-stepper">
-                <button type="button" onclick="changeQty('${i.name.replace(/'/g,"")}', -1)">−</button>
+                <button type="button" onclick="changeQty('${i.name.replace(/'/g,"")}', -1)"><svg width="10" height="10" viewBox="0 0 24 24" fill="none"><path d="M4 12h16" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg></button>
                 <span class="qty-val mono">${i.qty}</span>
-                <button type="button" onclick="changeQty('${i.name.replace(/'/g,"")}', 1)">+</button>
+                <button type="button" onclick="changeQty('${i.name.replace(/'/g,"")}', 1)"><svg width="10" height="10" viewBox="0 0 24 24" fill="none"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg></button>
               </div>
               <span class="review-price mono">${fmtPrice(i.price)}</span>
             </div>
