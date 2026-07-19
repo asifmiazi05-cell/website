@@ -414,7 +414,7 @@ function initCartFloat(){
   btn.setAttribute('aria-label', 'Shopping Cart');
   btn.innerHTML = `
     <div class="cf-top">
-      <svg viewBox="0 0 24 24" fill="none"><path d="M3 4h2l2.4 12.2a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 2-1.6L21 8H6" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10" cy="21" r="1.4" fill="#fff"/><circle cx="17" cy="21" r="1.4" fill="#fff"/></svg>
+      <svg viewBox="0 0 24 24" fill="none"><path d="M3 4h2l2.4 12.2a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 2-1.6L21 8H6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10" cy="21" r="1.4" fill="currentColor"/><circle cx="17" cy="21" r="1.4" fill="currentColor"/></svg>
       <span id="cfCount">0 Items</span>
     </div>
     <div class="cf-bottom" id="cfTotal">৳0.00</div>`;
