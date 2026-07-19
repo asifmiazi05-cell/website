@@ -787,6 +787,48 @@ function initSearchSuggestions(){
 }
 document.addEventListener('DOMContentLoaded', initSearchSuggestions);
 
+function initFlashCountdown(){
+  const numEls = document.querySelectorAll('.offer-timer .ot-num');
+  if(!numEls.length) return;
+  const pad = n => String(n).padStart(2, '0');
+
+  function nextTwelveHourMark(now){
+    const target = new Date(now);
+    if(now.getHours() < 12){
+      target.setHours(12, 0, 0, 0);
+    } else {
+      target.setDate(target.getDate() + 1);
+      target.setHours(0, 0, 0, 0);
+    }
+    return target;
+  }
+
+  function tick(){
+    const now = new Date();
+    const end = nextTwelveHourMark(now);
+    const diff = Math.max(0, end - now);
+    const totalSecs = Math.floor(diff / 1000);
+    const vals = {
+      h: pad(Math.floor(totalSecs / 3600)),
+      m: pad(Math.floor((totalSecs % 3600) / 60)),
+      s: pad(totalSecs % 60)
+    };
+    numEls.forEach(el=>{
+      const unit = el.dataset.unit;
+      const next = vals[unit];
+      if(next !== undefined && el.textContent !== next){
+        el.textContent = next;
+        el.classList.remove('tick');
+        void el.offsetWidth;
+        el.classList.add('tick');
+      }
+    });
+  }
+  tick();
+  setInterval(tick, 1000);
+}
+document.addEventListener('DOMContentLoaded', initFlashCountdown);
+
 function initHeaderMenu(){
   const btn = document.getElementById('moreBtn');
   const menu = document.getElementById('moreMenu');
