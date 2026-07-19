@@ -118,9 +118,6 @@ function cardActionsHTML(p){
     <button type="button" class="card-act-btn wishlist-btn${wished ? ' active' : ''}" data-name="${name}" onclick="event.stopPropagation(); toggleWishlist('${name}', this)" aria-label="Add to wishlist" title="Wishlist">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 20.3s-7.5-4.6-10-9.3C.6 7.8 2.3 4 6 4c2 0 3.6 1.1 4.6 2.7C11.6 5.1 13.2 4 15.2 4c3.7 0 5.4 3.8 4 7-2.5 4.7-10 9.3-10 9.3Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
     </button>
-    <a class="card-act-btn" href="${productHref(p)}" onclick="event.stopPropagation();" aria-label="Quick view" title="Quick view">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M1.5 12S5 5 12 5s10.5 7 10.5 7-3.5 7-10.5 7S1.5 12 1.5 12Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.8"/></svg>
-    </a>
   </div>`;
 }
 
@@ -134,7 +131,7 @@ function cardHTML(p){
         <span class="price">${fmtPrice(p.price)}</span>
         ${p.old ? `<span class="price-old">${fmtPrice(p.old)}</span>` : ''}
       </div>
-      <button class="add-btn" onclick="event.stopPropagation(); addToCart('${p.name.replace(/'/g,"")}', ${p.price})"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M3 4h2l2.4 12.2a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 2-1.6L21 8H6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10" cy="21" r="1.4" fill="currentColor"/><circle cx="17" cy="21" r="1.4" fill="currentColor"/></svg> Add to Cart</button>
+      <button class="add-btn" onclick="event.stopPropagation(); addToCart('${p.name.replace(/'/g,"")}', ${p.price}, this)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M3 4h2l2.4 12.2a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 2-1.6L21 8H6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10" cy="21" r="1.4" fill="currentColor"/><circle cx="17" cy="21" r="1.4" fill="currentColor"/></svg> Add to Cart</button>
     </div>
   </div>`;
 }
@@ -154,7 +151,7 @@ function offerCardHTML(p){
         <span class="price">${fmtPrice(p.price)}</span>
         ${p.old ? `<span class="price-old">${fmtPrice(p.old)}</span>` : ''}
       </div>
-      <button class="add-btn" onclick="event.stopPropagation(); addToCart('${p.name.replace(/'/g,"")}', ${p.price})"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M3 4h2l2.4 12.2a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 2-1.6L21 8H6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10" cy="21" r="1.4" fill="currentColor"/><circle cx="17" cy="21" r="1.4" fill="currentColor"/></svg> Add to Cart</button>
+      <button class="add-btn" onclick="event.stopPropagation(); addToCart('${p.name.replace(/'/g,"")}', ${p.price}, this)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M3 4h2l2.4 12.2a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 2-1.6L21 8H6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10" cy="21" r="1.4" fill="currentColor"/><circle cx="17" cy="21" r="1.4" fill="currentColor"/></svg> Add to Cart</button>
     </div>
   </div>`;
 }
@@ -279,22 +276,52 @@ function saveCartItems(items){
   }
   updateCartBadge();
 }
+let _prevCartCount = null;
 function updateCartBadge(){
   const count = getCartItems().reduce((s,i)=>s+i.qty, 0);
+  const increased = _prevCartCount !== null && count > _prevCartCount;
   document.querySelectorAll('#cartCount').forEach(el=>{
     el.textContent = count;
     el.classList.toggle('hide', count === 0);
+    if(increased){
+      el.classList.remove('cart-bump');
+      void el.offsetWidth; // restart the animation even if it's already mid-run
+      el.classList.add('cart-bump');
+    }
   });
+  if(increased){
+    document.querySelectorAll('.cart-icon-wrap, .cart-float').forEach(el=>{
+      el.classList.remove('cart-bump');
+      void el.offsetWidth;
+      el.classList.add('cart-bump');
+    });
+  }
+  _prevCartCount = count;
   if(typeof updateCartFloat === 'function') updateCartFloat();
   if(typeof renderCartDrawer === 'function') renderCartDrawer();
 }
-function addToCart(name, price){
+function showAddedFeedback(btn){
+  if(!btn) return;
+  if(btn._ghAddedTimer) clearTimeout(btn._ghAddedTimer);
+  if(!btn.dataset.originalHtml) btn.dataset.originalHtml = btn.innerHTML;
+  btn.classList.remove('added');
+  void btn.offsetWidth;
+  btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M4 12.5l5 5L20 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg> Added`;
+  btn.classList.add('added');
+  btn._ghAddedTimer = setTimeout(()=>{
+    btn.innerHTML = btn.dataset.originalHtml;
+    btn.classList.remove('added');
+    btn._ghAddedTimer = null;
+  }, 1100);
+}
+function addToCart(name, price, btnEl){
   const items = getCartItems();
   const existing = items.find(i=>i.name===name);
   if(existing){ existing.qty += 1; }
   else{ items.push({name, price:Number(price), qty:1}); }
   saveCartItems(items);
   if(typeof renderCheckoutSummary === 'function') renderCheckoutSummary();
+  showAddedFeedback(btnEl);
 }
 function removeFromCart(name){
   saveCartItems(getCartItems().filter(i=>i.name!==name));
@@ -402,6 +429,42 @@ function toggleTheme(){
 document.addEventListener('DOMContentLoaded', function(){
   updateThemeIcon(document.documentElement.getAttribute('data-theme') || 'light');
 });
+
+/* hide header (top-header + sub-header, both live inside <header>) on scroll down,
+   reveal it again on scroll up — only kicks in past a small threshold so it
+   doesn't flicker near the very top of the page */
+function initHeaderScroll(){
+  const header = document.querySelector('header');
+  if(!header) return;
+  let lastY = window.scrollY;
+  let ticking = false;
+  const HIDE_AFTER = 80;
+  const DELTA = 6; // ignore tiny scroll jitters so the animation only fires on deliberate scrolling
+
+  function update(){
+    const y = Math.max(0, window.scrollY);
+    const diff = y - lastY;
+
+    if(y <= HIDE_AFTER){
+      header.classList.remove('header-hide');
+    } else if(diff > DELTA){
+      header.classList.add('header-hide');
+      lastY = y;
+    } else if(diff < -DELTA){
+      header.classList.remove('header-hide');
+      lastY = y;
+    }
+    ticking = false;
+  }
+
+  window.addEventListener('scroll', ()=>{
+    if(!ticking){
+      requestAnimationFrame(update);
+      ticking = true;
+    }
+  }, {passive:true});
+}
+document.addEventListener('DOMContentLoaded', initHeaderScroll);
 
 /* floating cart widget + slide-in cart drawer */
 let cartFloatEl = null, cartBackdropEl = null, cartDrawerBodyEl = null, cartDrawerFootEl = null;
@@ -620,6 +683,109 @@ function doSearch(e){
   window.location.href = 'shop.html' + (q ? ('?search=' + encodeURIComponent(q)) : '');
   return false;
 }
+
+function escapeHtml(str){
+  return String(str).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+}
+
+/* live "type-ahead" suggestions dropdown under the header search bar —
+   matches product name, brand, or category so a keyword like "gaming" or
+   "audio" surfaces related products, not just literal name matches */
+function matchProductsForSearch(query){
+  const q = query.trim().toLowerCase();
+  if(!q) return [];
+  return products.filter(p=>{
+    const catName = (categoryNames[p.cat] || p.cat || '').toLowerCase();
+    return p.name.toLowerCase().includes(q) ||
+           (p.brand || '').toLowerCase().includes(q) ||
+           catName.includes(q);
+  });
+}
+
+function initSearchSuggestions(){
+  const input = document.getElementById('searchInput');
+  const form = document.querySelector('.search-form');
+  if(!input || !form) return;
+
+  const panel = document.createElement('div');
+  panel.className = 'search-suggest';
+  panel.id = 'searchSuggestPanel';
+  form.appendChild(panel);
+
+  let activeIndex = -1;
+  let debounceTimer = null;
+
+  function items(){
+    return Array.from(panel.querySelectorAll('.ss-item'));
+  }
+
+  function setActive(i){
+    const list = items();
+    activeIndex = i;
+    list.forEach((el, idx)=> el.classList.toggle('active', idx === activeIndex));
+    if(activeIndex > -1 && list[activeIndex]) list[activeIndex].scrollIntoView({block:'nearest'});
+  }
+
+  function renderPanel(rawQuery){
+    const query = rawQuery.trim();
+    if(!query){ closePanel(); return; }
+    const results = matchProductsForSearch(query).slice(0, 6);
+    activeIndex = -1;
+    if(results.length === 0){
+      panel.innerHTML = `<div class="ss-empty">No products found for "${escapeHtml(query)}"</div>`;
+    } else {
+      panel.innerHTML = results.map(p => `
+        <a href="${productHref(p)}" class="ss-item">
+          <span class="ss-emoji">${p.emoji}</span>
+          <span class="ss-info">
+            <span class="ss-name">${escapeHtml(p.name)}</span>
+            <span class="ss-price">${fmtPrice(p.price)}</span>
+          </span>
+        </a>`).join('') +
+        `<a href="shop.html?search=${encodeURIComponent(query)}" class="ss-viewall">See all results for "${escapeHtml(query)}" →</a>`;
+    }
+    panel.classList.add('show');
+  }
+
+  function closePanel(){
+    panel.classList.remove('show');
+    panel.innerHTML = '';
+    activeIndex = -1;
+  }
+
+  input.addEventListener('input', ()=>{
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(()=> renderPanel(input.value), 150);
+  });
+  input.addEventListener('focus', ()=>{
+    if(input.value.trim()) renderPanel(input.value);
+  });
+  document.addEventListener('click', (e)=>{
+    if(!form.contains(e.target)) closePanel();
+  });
+  input.addEventListener('keydown', (e)=>{
+    const list = items();
+    if(e.key === 'Escape'){
+      closePanel();
+      return;
+    }
+    if(e.key === 'ArrowDown' && list.length){
+      e.preventDefault();
+      setActive(Math.min(list.length - 1, activeIndex + 1));
+      return;
+    }
+    if(e.key === 'ArrowUp' && list.length){
+      e.preventDefault();
+      setActive(Math.max(0, activeIndex - 1));
+      return;
+    }
+    if(e.key === 'Enter' && activeIndex > -1 && list[activeIndex]){
+      e.preventDefault();
+      window.location.href = list[activeIndex].getAttribute('href');
+    }
+  });
+}
+document.addEventListener('DOMContentLoaded', initSearchSuggestions);
 
 function initHeaderMenu(){
   const btn = document.getElementById('moreBtn');

@@ -157,7 +157,11 @@ header{
   background:var(--hdr-bg);
   border-bottom:1px solid var(--hdr-border);
   box-shadow:0 1px 0 rgba(16,24,40,.03);
+  transition:transform .45s cubic-bezier(.22,.61,.36,1);
+  will-change:transform;
+  transform:translate3d(0,0,0);
 }
+header.header-hide{transform:translate3d(0,-100%,0);}
 .nav{display:flex; align-items:center; justify-content:space-between; padding:16px 0;}
 .logo{display:flex; align-items:center; gap:10px; font-size:20px; font-weight:700; color:var(--hdr-text);}
 .logo-mark{
@@ -175,8 +179,8 @@ header{
 .top-header .logo{flex-shrink:0; font-size:22px; gap:12px;}
 .top-header .logo-mark{width:42px; height:42px; font-size:17px; border-radius:10px;}
 .search-form{
-  flex:1; display:flex; align-items:center; gap:0;
-  background:#FFFFFF; border:1px solid var(--hdr-border); border-radius:999px;
+  flex:1; display:flex; align-items:center; gap:0; position:relative;
+  background:var(--hdr-bg-alt); border:1px solid var(--hdr-border); border-radius:999px;
   padding:6px;
 }
 .search-form input{
@@ -204,6 +208,39 @@ header{
 .search-form button:hover .search-ic-img,
 .search-form button:focus-visible .search-ic-img,
 .search-form button:active .search-ic-img{filter:brightness(0) saturate(100%) invert(1);}
+
+/* live "type-ahead" product suggestions under the search bar */
+.search-suggest{
+  position:absolute; top:calc(100% + 10px); left:0; right:0; z-index:70;
+  background:var(--card); border:1px solid var(--border); border-radius:16px;
+  box-shadow:0 16px 34px rgba(16,24,40,.16); padding:8px;
+  max-height:420px; overflow-y:auto;
+  opacity:0; visibility:hidden; transform:translateY(-6px);
+  transition:opacity .18s ease, transform .18s ease, visibility .18s;
+}
+[data-theme="dark"] .search-suggest{box-shadow:0 16px 34px rgba(0,0,0,.5);}
+.search-suggest.show{opacity:1; visibility:visible; transform:translateY(0);}
+.ss-item{
+  display:flex; align-items:center; gap:12px; padding:9px 10px; border-radius:10px;
+  color:var(--text); transition:background .15s ease;
+}
+.ss-item:hover, .ss-item.active{background:var(--bg-alt);}
+.ss-emoji{
+  width:36px; height:36px; flex-shrink:0; border-radius:9px; font-size:19px;
+  background:var(--bg-alt); display:flex; align-items:center; justify-content:center;
+}
+.ss-info{display:flex; flex-direction:column; gap:2px; min-width:0;}
+.ss-name{font-size:13.5px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.ss-price{font-size:12.5px; font-weight:700; color:var(--accent);}
+.ss-empty{padding:18px 10px; text-align:center; font-size:13px; color:var(--text-dim);}
+.ss-viewall{
+  display:block; text-align:center; padding:11px; margin-top:4px; border-top:1px solid var(--border);
+  font-size:13px; font-weight:700; color:var(--accent); border-radius:0 0 10px 10px;
+}
+.ss-viewall:hover{background:var(--bg-alt);}
+@media (max-width:640px){
+  .search-suggest{left:-6px; right:-6px;}
+}
 [data-theme="dark"] .search-form button:hover .search-ic-img,
 [data-theme="dark"] .search-form button:focus-visible .search-ic-img,
 [data-theme="dark"] .search-form button:active .search-ic-img{filter:brightness(0) saturate(100%);}
@@ -491,11 +528,12 @@ header{
 }
 .card:hover .card-actions, .offer-card:hover .card-actions{opacity:1; transform:translateX(0);}
 .card-act-btn{
-  width:32px; height:32px; border-radius:50%; background:#fff; border:1px solid var(--border);
+  width:32px; height:32px; border-radius:50%; background:var(--card); border:1px solid var(--border);
   display:flex; align-items:center; justify-content:center; color:var(--text); cursor:pointer;
   box-shadow:0 3px 8px rgba(16,24,40,.14);
   transition:background .15s ease, color .15s ease, border-color .15s ease;
 }
+[data-theme="dark"] .card-act-btn{box-shadow:0 3px 10px rgba(0,0,0,.45);}
 .card-act-btn:hover{background:var(--accent); border-color:var(--accent); color:var(--on-accent);}
 .wishlist-btn.active{background:var(--accent); border-color:var(--accent); color:var(--on-accent);}
 .wishlist-btn.active svg path{fill:currentColor;}
@@ -520,6 +558,34 @@ header{
 }
 .add-btn:hover{background:var(--accent-hover); border-color:var(--accent-hover); color:var(--on-accent);}
 .add-btn:active{transform:scale(.96);}
+.add-btn.added{
+  background:#1EA672; border-color:#1EA672; color:#fff;
+  animation:ghAddPop .38s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes ghAddPop{
+  0%{transform:scale(1);}
+  35%{transform:scale(1.06);}
+  100%{transform:scale(1);}
+}
+
+/* bump feedback on the header cart icon + floating cart pill whenever an item is added */
+@keyframes ghCartBump{
+  0%{transform:scale(1) rotate(0);}
+  25%{transform:scale(1.22) rotate(-8deg);}
+  50%{transform:scale(.94) rotate(6deg);}
+  75%{transform:scale(1.08) rotate(-2deg);}
+  100%{transform:scale(1) rotate(0);}
+}
+.cart-icon-wrap.cart-bump .ic, .cart-float.cart-bump .cf-top svg{
+  animation:ghCartBump .5s cubic-bezier(.34,1.56,.64,1);
+  transform-origin:center;
+}
+@keyframes ghBadgePop{
+  0%{transform:scale(1);}
+  40%{transform:scale(1.45);}
+  100%{transform:scale(1);}
+}
+.cart-badge.cart-bump{animation:ghBadgePop .5s cubic-bezier(.34,1.56,.64,1);}
 
 /* offer-style product box (badge overlaps border, grid, see-all footer) */
 .offer-box{

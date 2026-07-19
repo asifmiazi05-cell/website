@@ -157,8 +157,7 @@
 
   function baseList(){
     if(mode === 'search'){
-      const q = urlSearch.toLowerCase();
-      return products.filter(p=>p.name.toLowerCase().includes(q));
+      return matchProductsForSearch(urlSearch);
     }
     if(mode === 'offer'){
       return products.filter(p=>p.tag);
